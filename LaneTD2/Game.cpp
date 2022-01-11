@@ -8,7 +8,7 @@ Game::Game()
 
 	if (!this->font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
 	{
-		std::cout << "Font not found" << std::endl;
+		std::cout << "Font not foundlololo" << std::endl;
 	}
 	else
 	{
