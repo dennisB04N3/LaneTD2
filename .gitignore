@@ -1,3 +1,3 @@
-/LaneTD2/*.vcxproj
-/LaneTD2/*.vcxproj.filters
-/LaneTD2/*.vcxproj.user
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
