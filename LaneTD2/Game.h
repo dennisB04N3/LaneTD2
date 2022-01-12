@@ -12,7 +12,7 @@ class Game
 private:
 
 	Display* display;
-	//World* world;
+	World* world;
 	sf::Clock clock;
 	sf::RenderWindow* window;
 

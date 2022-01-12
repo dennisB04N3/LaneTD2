@@ -17,8 +17,7 @@ Game::Game()
 		this->text_MP.setFillColor(sf::Color::White);
 		this->text_MP.setPosition(20.f, 20.f);
 	}
-
-	//do all before display, give display necessary items for drawing
+	world = new World(mapPosition, gridSize, rows, columns);
 	this->display = new Display();
 	this->window = this->display->getWindow();
 }
@@ -76,7 +75,7 @@ void Game::start()
 		}*/
 		update();
 		window->clear();
-
+		//Game elements
 		//this->world->draw(*this->window);
 
 		window->setView(window->getDefaultView());
