@@ -26,6 +26,7 @@ private:
 	sf::Text text_MP;
 
 	//structure data for world
+	sf::Vector2f mapPosition;
 	int gridSize;
 	int rows;
 	int columns;
