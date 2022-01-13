@@ -1,5 +1,6 @@
 #pragma once
 #include"SFML/Graphics.hpp"
+#include"Tile.h"
 
 #include<map>
 
@@ -8,7 +9,9 @@ class World
 private:
 	//Tile and its Nodes as map of maps
 	//std::map<int, std::map<int, Node*>> nodeMap;
-	//std::map<int, std::map<int, Tile*>> tileMap;
+	std::map<int, std::map<int, Tile*>> tileMap;
+	std::map<int, std::map<int, int>> mapU2;
+
 
 	sf::Vector2f mapPosition;
 	int gridSize;

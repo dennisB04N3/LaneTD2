@@ -1,25 +1,28 @@
 #include "Game.h"
 Game::Game()
 {
-	this->gridSize = 50;
-	this->rows = 20;
-	this->columns = 20;
+	WINDOW_WIDTH = 1920;
+	WINDOW_HEIGHT = 1080;
 
+	gridSize = 50;
+	rows = 20;
+	columns = 20;
+	mapPosition = sf::Vector2f((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2), 100);
 
-	if (!this->font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
+	if (!font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
 	{
 		std::cout << "Font not foundlololo" << std::endl;
 	}
 	else
 	{
-		this->text_MP.setFont(font);
-		this->text_MP.setCharacterSize(12);
-		this->text_MP.setFillColor(sf::Color::White);
-		this->text_MP.setPosition(20.f, 20.f);
+		text_MP.setFont(font);
+		text_MP.setCharacterSize(12);
+		text_MP.setFillColor(sf::Color::White);
+		text_MP.setPosition(20.f, 20.f);
 	}
 	world = new World(mapPosition, gridSize, rows, columns);
-	this->display = new Display();
-	this->window = this->display->getWindow();
+	display = new Display();
+	window = display->getWindow();
 }
 
 Game::~Game()
@@ -76,7 +79,7 @@ void Game::start()
 		update();
 		window->clear();
 		//Game elements
-		//this->world->draw(*this->window);
+		this->world->draw(*window);
 
 		window->setView(window->getDefaultView());
 		window->draw(text_MP);
