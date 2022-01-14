@@ -95,11 +95,11 @@ void Game::updateMP()
 
 	if (MPView.x > 0)
 	{
-		MPGrid.x = static_cast<unsigned>((MPView.x) / gridSize);
+		MPGrid.x = static_cast<unsigned>((MPView.x) - mapPosition.x / gridSize);
 	}
 	if (MPView.y > 0)
 	{
-		MPGrid.y = static_cast<unsigned>((MPView.y) / gridSize);
+		MPGrid.y = static_cast<unsigned>((MPView.y) - mapPosition.y / gridSize);
 	}
 }
 
