@@ -5,9 +5,9 @@ Game::Game()
 	WINDOW_HEIGHT = 1080;
 
 	gridSize = 50;
-	rows = 20;
+	rows = 15;
 	columns = 20;
-	mapPosition = sf::Vector2f((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2), 100);
+	mapPosition = sf::Vector2f(static_cast<float>((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2)), 100);
 
 	if (!font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
 	{
@@ -79,7 +79,7 @@ void Game::start()
 		update();
 		window->clear();
 		//Game elements
-		this->world->draw(*window);
+		world->draw(*window);
 
 		window->setView(window->getDefaultView());
 		window->draw(text_MP);
@@ -89,17 +89,20 @@ void Game::start()
 
 void Game::updateMP()
 {
-	MPWindow = sf::Mouse::getPosition(*this->window);
-	window->setView(this->window->getView());
+	MPWindow = sf::Mouse::getPosition(*window);
+	window->setView(window->getView());
 	MPView = window->mapPixelToCoords(MPWindow);
 
-	if (MPView.x > 0)
+	//TODO: how to make more efficient?
+	if ((MPView.x > mapPosition.x && MPView.x < (mapPosition.x + columns * gridSize)) && (MPView.y > mapPosition.y && MPView.y < (mapPosition.y + rows * gridSize)))
 	{
-		MPGrid.x = static_cast<unsigned>((MPView.x) - mapPosition.x / gridSize);
+		MPGrid.x = static_cast<unsigned>(((MPView.x) - mapPosition.x) / gridSize);
+		MPGrid.y = static_cast<unsigned>(((MPView.y) - mapPosition.y) / gridSize);
 	}
-	if (MPView.y > 0)
+	else
 	{
-		MPGrid.y = static_cast<unsigned>((MPView.y) - mapPosition.y / gridSize);
+		MPGrid.x = 99999;
+		MPGrid.y = 99999;
 	}
 }
 

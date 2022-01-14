@@ -2,6 +2,7 @@
 #include"SFML/Graphics.hpp"
 #include"Tile.h"
 #include"Node.h"
+#include"Grid.h"
 
 #include<map>
 
@@ -13,6 +14,7 @@ private:
 	std::map<int, std::map<int, Tile*>> tileMap;
 	std::map<int, std::map<int, int>> mapU2;
 
+	Grid* grid;
 
 	sf::Vector2f mapPosition;
 	int gridSize;

@@ -3,7 +3,7 @@
 World::World(sf::Vector2f _mapPosition, int _gridSize, int _rows, int _columns) :
 	mapPosition(_mapPosition), gridSize(_gridSize), rows(_rows), columns(_columns)
 {
-	//Grid
+	grid = new Grid(gridSize, rows, columns, mapPosition);
 	initMaps();
 }
 
@@ -16,7 +16,7 @@ void World::initMaps()
 {
 	float posX = mapPosition.x;
 	float posY = mapPosition.y;
-	float halfGrid = gridSize / 2;
+	float halfGrid = static_cast<float>(gridSize / 2);
 
 	for (int x = 0; x < columns; x++)
 	{
@@ -40,5 +40,7 @@ void World::draw(sf::RenderTarget& target)
 			target.draw(nodeMap[x][y]->getShape());
 		}
 	}
+
+	grid->draw(target);
 
 }
