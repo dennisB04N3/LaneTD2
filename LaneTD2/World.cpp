@@ -5,11 +5,20 @@ World::World(sf::Vector2f _mapPosition, int _gridSize, int _rows, int _columns) 
 {
 	grid = new Grid(gridSize, rows, columns, mapPosition);
 	initMaps();
+	buildNeighbourNodes();
 }
 
 World::~World()
 {
 
+}
+
+void World::click(const sf::Vector2u& MPGrid)
+{
+	unsigned CoordinateX = MPGrid.x;
+	unsigned CoordinateY = MPGrid.y;
+
+	nodeMap.at(CoordinateX).at(CoordinateY)->click();
 }
 
 void World::initMaps()
@@ -26,6 +35,21 @@ void World::initMaps()
 		{
 			tileMap[x].insert(std::make_pair(y, new Tile(posX + (x * gridSize),	posY + (y * gridSize), gridSize)));
 			nodeMap[x].insert(std::make_pair(y, new Node(posX + (x * gridSize) + halfGrid, posY + (y * gridSize) + halfGrid)));
+			nodeMap[x][y]->setTile(tileMap[x][y]);
+		}
+	}
+}
+
+void World::buildNeighbourNodes()
+{
+	//currently cost matrix is build and saved here
+
+
+	for (int x = 0; x < columns; x++)
+	{
+		for (int y = 0; y < rows; y++)
+		{
+			nodeMap.at(x).at(y)->initNeighbours(&nodeMap, rows, columns, x, y);
 		}
 	}
 }
@@ -40,7 +64,5 @@ void World::draw(sf::RenderTarget& target)
 			target.draw(nodeMap[x][y]->getShape());
 		}
 	}
-
 	grid->draw(target);
-
 }

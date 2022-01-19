@@ -28,9 +28,9 @@ Game::Game()
 Game::~Game()
 {
 	delete this->display;
-	//delete this->world;
+	delete this->world;
 	this->display = nullptr;
-	//this->world = nullptr;
+	this->world = nullptr;
 	this->window = nullptr;
 }
 
@@ -52,10 +52,10 @@ void Game::start()
 			}
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
-				/*if (event.mouseButton.button == sf::Mouse::Left)
+				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					this->world->changeTile(&MPGrid);
-				}*/
+					this->world->click(MPGrid);
+				}
 			}
 			if (event.type == sf::Event::KeyPressed)
 			{
@@ -101,8 +101,8 @@ void Game::updateMP()
 	}
 	else
 	{
-		MPGrid.x = 99999;
-		MPGrid.y = 99999;
+		MPGrid.x = INT_MAX;
+		MPGrid.y = INT_MAX;
 	}
 }
 
