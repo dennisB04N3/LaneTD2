@@ -11,8 +11,10 @@ class Game
 {
 private:
 
+	int WINDOW_WIDTH, WINDOW_HEIGHT;
+
 	Display* display;
-	//World* world;
+	World* world;
 	sf::Clock clock;
 	sf::RenderWindow* window;
 

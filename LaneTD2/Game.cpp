@@ -1,34 +1,36 @@
 #include "Game.h"
 Game::Game()
 {
-	this->gridSize = 50;
-	this->rows = 20;
-	this->columns = 20;
+	WINDOW_WIDTH = 1920;
+	WINDOW_HEIGHT = 1080;
 
+	gridSize = 50;
+	rows = 15;
+	columns = 20;
+	mapPosition = sf::Vector2f(static_cast<float>((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2)), 100);
 
-	if (!this->font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
+	if (!font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
 	{
 		std::cout << "Font not foundlololo" << std::endl;
 	}
 	else
 	{
-		this->text_MP.setFont(font);
-		this->text_MP.setCharacterSize(12);
-		this->text_MP.setFillColor(sf::Color::White);
-		this->text_MP.setPosition(20.f, 20.f);
+		text_MP.setFont(font);
+		text_MP.setCharacterSize(12);
+		text_MP.setFillColor(sf::Color::White);
+		text_MP.setPosition(20.f, 20.f);
 	}
-
-	//do all before display, give display necessary items for drawing
-	this->display = new Display();
-	this->window = this->display->getWindow();
+	world = new World(mapPosition, gridSize, rows, columns);
+	display = new Display();
+	window = display->getWindow();
 }
 
 Game::~Game()
 {
 	delete this->display;
-	//delete this->world;
+	delete this->world;
 	this->display = nullptr;
-	//this->world = nullptr;
+	this->world = nullptr;
 	this->window = nullptr;
 }
 
@@ -50,10 +52,10 @@ void Game::start()
 			}
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
-				/*if (event.mouseButton.button == sf::Mouse::Left)
+				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					this->world->changeTile(&MPGrid);
-				}*/
+					this->world->click(MPGrid);
+				}
 			}
 			if (event.type == sf::Event::KeyPressed)
 			{
@@ -76,8 +78,8 @@ void Game::start()
 		}*/
 		update();
 		window->clear();
-
-		//this->world->draw(*this->window);
+		//Game elements
+		world->draw(*window);
 
 		window->setView(window->getDefaultView());
 		window->draw(text_MP);
@@ -87,17 +89,20 @@ void Game::start()
 
 void Game::updateMP()
 {
-	MPWindow = sf::Mouse::getPosition(*this->window);
-	window->setView(this->window->getView());
+	MPWindow = sf::Mouse::getPosition(*window);
+	window->setView(window->getView());
 	MPView = window->mapPixelToCoords(MPWindow);
 
-	if (MPView.x > 0)
+	//TODO: how to make more efficient?
+	if ((MPView.x > mapPosition.x && MPView.x < (mapPosition.x + columns * gridSize)) && (MPView.y > mapPosition.y && MPView.y < (mapPosition.y + rows * gridSize)))
 	{
-		MPGrid.x = static_cast<unsigned>((MPView.x) / gridSize);
+		MPGrid.x = static_cast<unsigned>(((MPView.x) - mapPosition.x) / gridSize);
+		MPGrid.y = static_cast<unsigned>(((MPView.y) - mapPosition.y) / gridSize);
 	}
-	if (MPView.y > 0)
+	else
 	{
-		MPGrid.y = static_cast<unsigned>((MPView.y) / gridSize);
+		MPGrid.x = INT_MAX;
+		MPGrid.y = INT_MAX;
 	}
 }
 
