@@ -23,9 +23,6 @@ private:
 	sf::Vector2f MPView;
 	sf::Vector2u MPGrid;
 
-	//Text for Mouse position
-	sf::Font font;
-	sf::Text text_MP;
 
 	//structure data for world
 	sf::Vector2f mapPosition;
@@ -35,6 +32,12 @@ private:
 
 	void update();
 	void updateMP();
+
+	//following just for testing, must later be erased
+	//Text for Mouse position
+	sf::Font font;
+	sf::Text text_MP;
+	bool pathfinder_ran;
 
 public:
 	Game();

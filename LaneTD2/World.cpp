@@ -6,6 +6,17 @@ World::World(sf::Vector2f _mapPosition, int _gridSize, int _rows, int _columns) 
 	grid = new Grid(gridSize, rows, columns, mapPosition);
 	initMaps();
 	buildNeighbourNodes();
+
+	/*std::unordered_map<Node*, int> node_hashMap;
+	for (int x = 0; x < columns; x++)
+	{
+		for (int y = 0; y < rows; y++)
+		{
+			node_hashMap.insert(std::make_pair(nodeMap.at(x).at(y), INT_MAX));
+		}
+	}*/
+	pathfinder = new Pathfinder(nodeMap.at(1).at(1), nodeMap.at(columns-2).at(rows-2)/*, node_hashMap*/);
+
 }
 
 World::~World()
@@ -42,7 +53,6 @@ void World::initMaps()
 
 void World::buildNeighbourNodes()
 {
-	//currently cost matrix is build and saved here
 
 
 	for (int x = 0; x < columns; x++)
@@ -61,7 +71,6 @@ void World::draw(sf::RenderTarget& target)
 		for (int y = 0; y < rows; y++)
 		{
 			target.draw(tileMap[x][y]->getShape());
-			target.draw(nodeMap[x][y]->getShape());
 		}
 	}
 	grid->draw(target);

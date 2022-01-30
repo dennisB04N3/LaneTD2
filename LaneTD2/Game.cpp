@@ -4,9 +4,9 @@ Game::Game()
 	WINDOW_WIDTH = 1920;
 	WINDOW_HEIGHT = 1080;
 
-	gridSize = 50;
-	rows = 15;
-	columns = 20;
+	gridSize = 25;
+	rows = 20;
+	columns = 50;
 	mapPosition = sf::Vector2f(static_cast<float>((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2)), 100);
 
 	if (!font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
@@ -23,6 +23,7 @@ Game::Game()
 	world = new World(mapPosition, gridSize, rows, columns);
 	display = new Display();
 	window = display->getWindow();
+	pathfinder_ran = false;
 }
 
 Game::~Game()
@@ -77,6 +78,11 @@ void Game::start()
 			this->display->moveView('S', deltaTime);
 		}*/
 		update();
+		if (!pathfinder_ran)
+		{
+			world->start_pathfinding();
+			pathfinder_ran = true;
+		}
 		window->clear();
 		//Game elements
 		world->draw(*window);

@@ -3,8 +3,9 @@
 #include"Tile.h"
 #include"Node.h"
 #include"Grid.h"
+#include"Pathfinder.h"
 
-#include<map>
+#include<unordered_map>
 
 class World
 {
@@ -12,6 +13,7 @@ private:
 	//Tile and its Nodes as map of maps
 	std::map<int, std::map<int, Node*>> nodeMap;
 	std::map<int, std::map<int, Tile*>> tileMap;
+	Pathfinder* pathfinder;
 
 	Grid* grid;
 
@@ -21,11 +23,7 @@ private:
 	int columns;
 
 	void initMaps();
-	/*method to initialize the neighbours of every node in nodeMap
-	method directs to method in nodes, which than builds up its neighbours
-	with the given data.
-	nodeMap - nodemap to get the right neighbors
-	rows, columns, posX, posY - variables for boundary calculation with the actual coordintes of calling node*/
+
 	void buildNeighbourNodes();
 	
 public:
@@ -36,6 +34,7 @@ public:
 	void click(const sf::Vector2u& MPGrid);
 
 	void draw(sf::RenderTarget& target);
+	inline void start_pathfinding() { pathfinder->start(); }
 };
 
 //TODO: 
