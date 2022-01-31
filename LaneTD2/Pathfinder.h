@@ -11,12 +11,12 @@ private:
 	bool b_path_found;
 
 	Node* dijsktra();
-
 	Node* get_lowest_cost_node(const std::unordered_map<Node*, int>& OPENLIST);
-public:
 
+public:
 	Pathfinder(Node* start, Node* end);
 	~Pathfinder() {};
+
 	void start();
 	void draw_path();
 };

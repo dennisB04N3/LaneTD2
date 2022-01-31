@@ -78,7 +78,7 @@ void Game::start()
 			this->display->moveView('S', deltaTime);
 		}*/
 		update();
-		if (!pathfinder_ran)
+		if (!pathfinder_ran)//testing
 		{
 			world->start_pathfinding();
 			pathfinder_ran = true;
@@ -99,7 +99,7 @@ void Game::updateMP()
 	window->setView(window->getView());
 	MPView = window->mapPixelToCoords(MPWindow);
 
-	//TODO: how to make more efficient?
+	//TODO: how to make a better read?
 	if ((MPView.x > mapPosition.x && MPView.x < (mapPosition.x + columns * gridSize)) && (MPView.y > mapPosition.y && MPView.y < (mapPosition.y + rows * gridSize)))
 	{
 		MPGrid.x = static_cast<unsigned>(((MPView.x) - mapPosition.x) / gridSize);
@@ -114,6 +114,7 @@ void Game::updateMP()
 
 void Game::update()
 {
+	//right now for testing
 	std::string str;
 
 	str = "Window:\t" + std::to_string(MPWindow.x) + " " + std::to_string(MPWindow.y) + "\n"
@@ -122,21 +123,3 @@ void Game::update()
 
 	text_MP.setString(str);
 }
-
-
-/*For later use:
-
-sf::Vertex vertices[] =
-{
-	sf::Vertex(sf::Vector2f(100, 0), sf::Color::Red),
-	sf::Vertex(sf::Vector2f(100, 100), sf::Color::Red)
-};
-// draw it
-
-sf::VertexArray lines(sf::LinesStrip, 4);
-lines[0].position = sf::Vector2f(100, 100);
-lines[1].position = sf::Vector2f(200, 100);
-lines[2].position = sf::Vector2f(300, 500);
-lines[3].position = sf::Vector2f(400, 200);
-window->draw(vertices, 2, sf::Lines);
-window->draw(lines);*/
