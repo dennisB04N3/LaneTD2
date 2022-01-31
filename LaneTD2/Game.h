@@ -10,7 +10,6 @@
 class Game
 {
 private:
-
 	int WINDOW_WIDTH, WINDOW_HEIGHT;
 
 	Display* display;
@@ -22,7 +21,6 @@ private:
 	sf::Vector2i MPWindow;
 	sf::Vector2f MPView;
 	sf::Vector2u MPGrid;
-
 
 	//structure data for world
 	sf::Vector2f mapPosition;
@@ -37,6 +35,7 @@ private:
 	//Text for Mouse position
 	sf::Font font;
 	sf::Text text_MP;
+	//bool for started pathfinder
 	bool pathfinder_ran;
 
 public:

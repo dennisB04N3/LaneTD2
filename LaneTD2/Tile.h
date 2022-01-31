@@ -3,14 +3,14 @@
 class Tile
 {
 private:
-
 	sf::RectangleShape shape;
 
-	bool occupied;
+	bool traversable;
 
 public:
 	Tile(float posX, float posY, int size);
 
-	sf::RectangleShape& getShape() { return shape; }
+	//getter/setter
+	inline sf::RectangleShape& getShape() { return shape; }
 };
 
