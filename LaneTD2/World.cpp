@@ -59,7 +59,7 @@ void World::draw(sf::RenderTarget& target)
 			target.draw(tile_map[x][y]->getShape());
 		}
 	}
-	//grid->draw(target);
+	grid->draw(target);
 }
 
 void World::place_startNode(sf::Vector2u coordinates)

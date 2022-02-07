@@ -7,7 +7,7 @@ Game::Game() :
 
 	gridSize = 30;
 	rows = 50;
-	columns = 10;
+	columns = 15;
 	mapPosition = sf::Vector2f(static_cast<float>((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2)), 100);
 
 	if (!font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
