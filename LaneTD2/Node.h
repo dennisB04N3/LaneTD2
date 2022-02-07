@@ -9,7 +9,6 @@ private:
 	std::unordered_map<Node*, int> neighbours;
 	Node* parent;
 
-	sf::CircleShape shape;
 	sf::Vector2f position;
 	Tile* tile;
 	int cost;
@@ -21,6 +20,7 @@ public:
 
 	void click();
 	void initNeighbours(std::map<int, std::map<int, Node*>>* node_map, const int rows, const int columns, const int posX, const int posY);
+	void changeState(char state);
 
 	//getters/setters
 	inline sf::RectangleShape& getTileShape() { return tile->getShape(); }
@@ -30,6 +30,7 @@ public:
 	inline void setParent(Node* _parent) { parent = _parent; }
 	inline Node* getParent() { return parent; }
 	inline std::unordered_map<Node*, int>& getNeighbours() { return neighbours; }
+	inline bool isTraversable() { return tile->getTraversable(); }
 
 };
 

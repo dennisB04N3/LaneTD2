@@ -5,9 +5,6 @@ Node::Node(float posX, float posY) :
 {
 	neighbours = std::unordered_map<Node*, int>(0);
 	position = sf::Vector2f(posX, posY);
-	shape.setPosition(position);
-	shape.setFillColor(sf::Color::Magenta);
-	shape.setRadius(5);
 }
 
 void Node::click()
@@ -53,5 +50,40 @@ void Node::initNeighbours(std::map<int, std::map<int, Node*>>* node_map,
 			}
 		}
 		x_costArray++;
+	}
+}
+
+void Node::changeState(char state)
+{
+	switch (state)
+	{
+		case 's'://startNode
+			tile->setTraversable(1);
+			tile->setColor(sf::Color::Green);
+			break;
+		case 'e'://endNode
+			tile->setTraversable(1);
+			tile->setColor(sf::Color::Red);
+			break;
+		case 'w'://wall
+			if (tile->getTraversable())
+			{
+				tile->setTraversable(0);
+				tile->setColor(sf::Color::Black);
+			}
+			else
+			{
+				tile->setTraversable(1);
+				tile->setColor(sf::Color::White);
+			}
+			break;
+		case 'r'://reset
+			cost = INT_MAX;
+			parent = nullptr;
+			tile->setTraversable(1);
+			tile->setColor(sf::Color::White);
+			break;
+		default:
+			break;
 	}
 }

@@ -6,8 +6,7 @@ World::World(sf::Vector2f _mapPosition, int _gridSize, int _rows, int _columns) 
 	grid = new Grid(gridSize, rows, columns, mapPosition);
 	init_Maps();
 	build_neighbour_nodes();
-	pathfinder = new Pathfinder(node_map.at(1).at(1), node_map.at(columns-2).at(rows-2)/*, node_hashMap*/);
-
+	pathfinder = new Pathfinder();
 }
 
 //TODO: delete pointers
@@ -33,7 +32,7 @@ void World::init_Maps()
 		node_map.insert(std::make_pair(x, std::map<int, Node*>()));
 		for (int y = 0; y < rows; y++)
 		{
-			tile_map[x].insert(std::make_pair(y, new Tile(posX + (x * gridSize),	posY + (y * gridSize), gridSize)));
+			tile_map[x].insert(std::make_pair(y, new Tile(posX + (x * gridSize), posY + (y * gridSize), gridSize)));
 			node_map[x].insert(std::make_pair(y, new Node(posX + (x * gridSize) + halfGrid, posY + (y * gridSize) + halfGrid)));
 			node_map[x][y]->setTile(tile_map[x][y]);
 		}
@@ -60,5 +59,38 @@ void World::draw(sf::RenderTarget& target)
 			target.draw(tile_map[x][y]->getShape());
 		}
 	}
-	grid->draw(target);
+	//grid->draw(target);
+}
+
+void World::place_startNode(sf::Vector2u coordinates)
+{
+	if (pathfinder->startNode)
+		pathfinder->startNode->changeState('r');
+	pathfinder->startNode = node_map[coordinates.x][coordinates.y];
+	pathfinder->startNode->changeState('s');
+}
+
+void World::place_endNode(sf::Vector2u coordinates)
+{
+	if (pathfinder->endNode)
+		pathfinder->endNode->changeState('r');
+	pathfinder->endNode = node_map[coordinates.x][coordinates.y];
+	pathfinder->endNode->changeState('e');
+}
+
+void World::place_wall(sf::Vector2u coordinates)
+{
+	node_map[coordinates.x][coordinates.y]->changeState('w');
+}
+
+void World::reset_pathfinder()
+{
+	for (int x = 0; x < columns; x++)
+	{
+		for (int y = 0; y < rows; y++)
+		{
+			node_map[x][y]->changeState('r');
+		}
+	}
+	pathfinder->reset();
 }

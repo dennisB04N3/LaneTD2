@@ -1,12 +1,13 @@
 #include "Game.h"
-Game::Game()
+Game::Game() :
+	place_endNode_onClick(0), place_startNode_onClick(0), button_pressed(0)
 {
 	WINDOW_WIDTH = 1920;
 	WINDOW_HEIGHT = 1080;
 
-	gridSize = 25;
-	rows = 20;
-	columns = 50;
+	gridSize = 30;
+	rows = 50;
+	columns = 10;
 	mapPosition = sf::Vector2f(static_cast<float>((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2)), 100);
 
 	if (!font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
@@ -23,7 +24,10 @@ Game::Game()
 	world = new World(mapPosition, gridSize, rows, columns);
 	display = new Display();
 	window = display->getWindow();
-	pathfinder_ran = false;
+
+	button_resetNodes.setSize(sf::Vector2f(80, 40));
+	button_resetNodes.setFillColor(sf::Color::Yellow);
+	button_resetNodes.setPosition(20,WINDOW_HEIGHT - 100);
 }
 
 Game::~Game()
@@ -47,7 +51,63 @@ void Game::start()
 
 		while (window->pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			switch (event.type)
+			{
+			case sf::Event::Closed:
+				window->close();
+				break;
+
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::W)
+					this->display->moveView('W', deltaTime);
+				if (event.key.code == sf::Keyboard::S)
+					this->display->moveView('S', deltaTime);
+				if (event.key.code == sf::Keyboard::E)
+				{
+					place_startNode_onClick = false; 
+					place_endNode_onClick = !place_endNode_onClick; 
+					//std::cout << place_startNode_onClick << " " << place_endNode_onClick << std::endl;
+				}
+				if (event.key.code == sf::Keyboard::D)
+				{
+					place_endNode_onClick = false; 
+					place_startNode_onClick = !place_startNode_onClick;
+					//std::cout << place_startNode_onClick << " " << place_endNode_onClick << std::endl;
+				}
+				break;
+
+			case sf::Event::MouseButtonPressed:
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					if (MPGrid.x < INT_MAX && MPGrid.y < INT_MAX)
+					{
+						if (place_endNode_onClick == true)
+							world->place_endNode(MPGrid);
+						else if(place_startNode_onClick == true)
+							world->place_startNode(MPGrid);
+						else
+							this->world->place_wall(MPGrid);
+					}
+					if (button_resetNodes.getGlobalBounds().contains(MPWindow.x, MPWindow.y))
+					{
+						std::cout << "button pressed" << std::endl;
+						if (!button_pressed)
+						{
+							std::cout << "start pathfinder" << std::endl;
+							world->start_pathfinder();
+							button_pressed = 1;
+						}
+						else
+						{
+							std::cout << "reset pathfinder" << std::endl;
+							world->reset_pathfinder();
+							button_pressed = 0;
+						}
+					}
+				}
+
+			}
+			/*if (event.type == sf::Event::Closed)
 			{
 				window->close();
 			}
@@ -55,12 +115,15 @@ void Game::start()
 			{
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					this->world->click(MPGrid);
+					if (MPGrid.x < INT_MAX && MPGrid.y < INT_MAX)
+					{
+						this->world->click(MPGrid);
+					}
 				}
 			}
 			if (event.type == sf::Event::KeyPressed)
 			{
-				/*if (event.key.code == sf::Keyboard::W)
+				if (event.key.code == sf::Keyboard::W)
 				{
 					this->display->moveView('W', deltaTime);
 
@@ -69,25 +132,18 @@ void Game::start()
 				{
 					this->display->moveView('S', deltaTime);
 
-				}*/
-			}
-		}
-		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		{
-			std::cout << "another method" << std::endl;
-			this->display->moveView('S', deltaTime);
-		}*/
-		update();
-		if (!pathfinder_ran)//testing
-		{
-			world->start_pathfinding();
-			pathfinder_ran = true;
+				}
+			}*/
 		}
 		window->clear();
+		//display->set_window_to_view();
+		update();
+
 		//Game elements
 		world->draw(*window);
 
-		window->setView(window->getDefaultView());
+		display->set_window_to_default();
+		window->draw(button_resetNodes);
 		window->draw(text_MP);
 		window->display();
 	}
@@ -96,10 +152,11 @@ void Game::start()
 void Game::updateMP()
 {
 	MPWindow = sf::Mouse::getPosition(*window);
-	window->setView(window->getView());
+	display->set_window_to_view();
 	MPView = window->mapPixelToCoords(MPWindow);
 
-	//TODO: how to make a better read?
+	//TODO: how to make a better read? -> checktarget? 
+	//if GUI implemented there must be a checkTarget function anyways
 	if ((MPView.x > mapPosition.x && MPView.x < (mapPosition.x + columns * gridSize)) && (MPView.y > mapPosition.y && MPView.y < (mapPosition.y + rows * gridSize)))
 	{
 		MPGrid.x = static_cast<unsigned>(((MPView.x) - mapPosition.x) / gridSize);
