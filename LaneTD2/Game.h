@@ -31,12 +31,18 @@ private:
 	void update();
 	void updateMP();
 
+	//different buttons or booleans for event-handling such as:
+	//	-when does the click mean the start or end node have to be placed
+	//	-when to start the pathfinder
+	bool place_startNode_onClick;
+	bool place_endNode_onClick;
+	sf::RectangleShape button_resetNodes;
+	bool button_pressed;
+
 	//following just for testing, must later be erased
 	//Text for Mouse position
 	sf::Font font;
 	sf::Text text_MP;
-	//bool for started pathfinder
-	bool pathfinder_ran;
 
 public:
 	Game();
