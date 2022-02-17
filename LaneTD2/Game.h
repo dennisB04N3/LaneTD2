@@ -23,26 +23,28 @@ private:
 	sf::Vector2u MPGrid;
 
 	//structure data for world
+	sf::RectangleShape map_borders;
 	sf::Vector2f mapPosition;
 	int gridSize;
 	int rows;
 	int columns;
 
-	void update();
-	void updateMP();
-
-	//different buttons or booleans for event-handling such as:
-	//	-when does the click mean the start or end node have to be placed
-	//	-when to start the pathfinder
+	//different buttons or booleans for event-handling
 	bool place_startNode_onClick;
 	bool place_endNode_onClick;
-	sf::RectangleShape button_resetNodes;
 	bool button_pressed;
+	sf::RectangleShape button_resetNodes;
+	sf::RectangleShape tile_selector;
+	bool left_mouse_button_pressed;
+	bool right_mouse_button_pressed;
 
 	//following just for testing, must later be erased
 	//Text for Mouse position
 	sf::Font font;
 	sf::Text text_MP;
+
+	void update();
+	void pre_event_update();
 
 public:
 	Game();

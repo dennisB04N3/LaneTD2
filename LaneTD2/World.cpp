@@ -83,6 +83,15 @@ void World::place_wall(sf::Vector2u coordinates)
 	node_map[coordinates.x][coordinates.y]->changeState('w');
 }
 
+void World::reset_node(sf::Vector2u coordinates)
+{
+	node_map[coordinates.x][coordinates.y]->changeState('r');
+	if (pathfinder->startNode == node_map[coordinates.x][coordinates.y])
+		pathfinder->startNode = nullptr;
+	if (pathfinder->endNode == node_map[coordinates.x][coordinates.y])
+		pathfinder->endNode = nullptr;
+}
+
 void World::reset_pathfinder()
 {
 	for (int x = 0; x < columns; x++)

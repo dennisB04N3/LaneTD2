@@ -7,6 +7,7 @@ Node::Node(float posX, float posY) :
 	position = sf::Vector2f(posX, posY);
 }
 
+//delete
 void Node::click()
 {
 	tile->getShape().setFillColor(sf::Color::Black);
@@ -16,16 +17,18 @@ void Node::click()
 	}
 }
 
-void Node::initNeighbours(std::map<int, std::map<int, Node*>>* node_map, 
+void Node::initNeighbours( std::map<int,std::map<int,Node*>>* node_map, 
 		const int rows, const int columns, const int posX, const int posY)
 {
-	//currently cost matrix is build and saved here
+	//cost matrix
 	int costArray[3][3] = {
-		{14,10,14},
-		{10,0 ,10},
-		{14,10,14}
+		{INT_MAX,10,INT_MAX},
+		{10,     0 ,10},
+		{INT_MAX,10,INT_MAX}
 	};
 
+	//merging cost-array with neighbours of current node (represented with posX and Y)
+	//on node_map to create the neighbour-vertices(as hashmap) held by current node <- (neighbour, cost)
 	int x_costArray = 0;
 	for (int x = posX - 1; x <= posX + 1; x++)
 	{
@@ -41,10 +44,12 @@ void Node::initNeighbours(std::map<int, std::map<int, Node*>>* node_map,
 						y_costArray++;
 						continue;
 					}
-					neighbours.insert(std::make_pair(
-						node_map->at(x).at(y),
-						costArray[x_costArray][y_costArray]
-					));
+					if (costArray[x_costArray][y_costArray] != INT_MAX) {
+						neighbours.insert(std::make_pair(
+							node_map->at(x).at(y),
+							costArray[x_costArray][y_costArray]
+						));
+					}
 				}
 				y_costArray++;
 			}
@@ -66,16 +71,8 @@ void Node::changeState(char state)
 			tile->setColor(sf::Color::Red);
 			break;
 		case 'w'://wall
-			if (tile->getTraversable())
-			{
-				tile->setTraversable(0);
-				tile->setColor(sf::Color::Black);
-			}
-			else
-			{
-				tile->setTraversable(1);
-				tile->setColor(sf::Color::White);
-			}
+			tile->setTraversable(0);
+			tile->setColor(sf::Color::Black);
 			break;
 		case 'r'://reset
 			cost = INT_MAX;
