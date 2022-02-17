@@ -12,9 +12,6 @@ Pathfinder::Pathfinder(Node* start, Node* end) :
 
 Node* Pathfinder::dijsktra()
 {
-	//std::cout << "before while" << std::endl;
-	//std::cout << "" << std::endl;
-
 	int current_cost = 0;
 	OPENLIST.insert(std::make_pair(startNode, current_cost));
 	Node* current = nullptr;
@@ -25,16 +22,10 @@ Node* Pathfinder::dijsktra()
 		current_cost = OPENLIST[current];
 		CLOSEDLIST.insert(std::make_pair(current, OPENLIST[current]));
 		OPENLIST.erase(current);
-		//std::cout << "current" << current << std::endl;
-		//std::cout << "OPENLIST SIZE:" << OPENLIST.size() << std::endl;
-		//std::cout << "CLOSEDLIST SIZE:" << CLOSEDLIST.size() << std::endl;
-		//std::cout << "" << std::endl;
-
 
 		if (current == endNode) 
 		{
 			b_path_found = 1;
-			//std::cout << "RETURNING NODE: " << current << std::endl;
 			return current; 
 		}
 
@@ -74,14 +65,12 @@ Node* Pathfinder::get_lowest_cost_node()
 void Pathfinder::draw_path()
 {
 	Node* node = dijsktra();
-	std::cout << "after dijkstra method" << std::endl;
-	std::cout << node << std::endl;
+
 	if (node)
 	{
 		node = node->getParent();
 		while (node->getParent())
 		{
-			std::cout << "in while loop" << std::endl;
 			node->getTileShape().setFillColor(sf::Color::Magenta);
 			node = node->getParent();
 		}
@@ -97,11 +86,8 @@ void Pathfinder::reset()
 
 void Pathfinder::start()
 {
-	std::cout << "pathfinder start() called" << std::endl;
-	std::cout << startNode << " " << endNode << std::endl;
 	if (startNode && endNode)
 	{
-		std::cout << "before draw_path()" << std::endl;
 		draw_path();
 	}
 }

@@ -3,13 +3,13 @@
 Grid::Grid(int gridSize, int tileRows, int tileColumns, sf::Vector2f position) :
 	visible(true)
 {
-	sf::Color color = sf::Color::Color(50, 150, 150);
+	sf::Color color = sf::Color::Color(50, 50, 150);
 	int line_width = tileColumns * gridSize;
 	int line_height = tileRows * gridSize;
 
 	float posX = position.x;
 	float posY = position.y;
-	int line_thickness = 2;
+	int line_thickness = 1;
 
 	//templates of horizontal and vertical line that gets copied into grid-vector
 	sf::RectangleShape horizontal_line;

@@ -1,13 +1,13 @@
 #include "Game.h"
 Game::Game() :
-	place_endNode_onClick(0), place_startNode_onClick(0), button_pressed(0)
+	place_endNode_onClick(0), place_startNode_onClick(0), button_pressed(0), left_mouse_button_pressed(0)
 {
 	WINDOW_WIDTH = 1920;
 	WINDOW_HEIGHT = 1080;
 
 	gridSize = 30;
 	rows = 50;
-	columns = 10;
+	columns = 15;
 	mapPosition = sf::Vector2f(static_cast<float>((WINDOW_WIDTH / 2) - ((columns * gridSize) / 2)), 100);
 
 	if (!font.loadFromFile("D:/workspaces/libs/SFML-2.5.1/examples/island/resources/sansation.ttf"))
@@ -28,6 +28,13 @@ Game::Game() :
 	button_resetNodes.setSize(sf::Vector2f(80, 40));
 	button_resetNodes.setFillColor(sf::Color::Yellow);
 	button_resetNodes.setPosition(20,WINDOW_HEIGHT - 100);
+	tile_selector = sf::RectangleShape(sf::Vector2f(gridSize, gridSize));
+	tile_selector.setOutlineThickness(2);
+	tile_selector.setOutlineColor(sf::Color::Green);
+	tile_selector.setFillColor(sf::Color::Transparent);
+	map_borders.setSize(sf::Vector2f(columns * gridSize, rows * gridSize));
+	map_borders.setPosition(mapPosition);
+
 }
 
 Game::~Game()
@@ -45,23 +52,41 @@ void Game::start()
 
 	while (window->isOpen())
 	{
+		pre_event_update();
 		deltaTime = clock.restart().asSeconds();
-		updateMP();
 		sf::Event event;
 
 		while (window->pollEvent(event))
 		{
+			if (left_mouse_button_pressed && map_borders.getGlobalBounds().contains(MPView.x, MPView.y))
+			{
+				world->place_wall(MPGrid);
+			}
+			if (right_mouse_button_pressed && map_borders.getGlobalBounds().contains(MPView.x, MPView.y))
+			{
+				world->reset_node(MPGrid);
+			}
+
 			switch (event.type)
 			{
 			case sf::Event::Closed:
 				window->close();
 				break;
+			
+			case sf::Event::MouseButtonReleased:
+				left_mouse_button_pressed = 0;
+				right_mouse_button_pressed = 0;
+				break;
 
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::W)
+				{
 					this->display->moveView('W', deltaTime);
+				}
 				if (event.key.code == sf::Keyboard::S)
+				{
 					this->display->moveView('S', deltaTime);
+				}
 				if (event.key.code == sf::Keyboard::E)
 				{
 					place_startNode_onClick = false; 
@@ -79,77 +104,59 @@ void Game::start()
 			case sf::Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					if (MPGrid.x < INT_MAX && MPGrid.y < INT_MAX)
-					{
-						if (place_endNode_onClick == true)
+					if (map_borders.getGlobalBounds().contains(MPView.x, MPView.y))
+					{	
+						if (place_endNode_onClick)
 							world->place_endNode(MPGrid);
-						else if(place_startNode_onClick == true)
+						else if(place_startNode_onClick)
 							world->place_startNode(MPGrid);
 						else
+						{
 							this->world->place_wall(MPGrid);
+							left_mouse_button_pressed = 1;
+						}
 					}
-					if (button_resetNodes.getGlobalBounds().contains(MPWindow.x, MPWindow.y))
+					if (button_resetNodes.getGlobalBounds().contains(MPView.x, MPView.y))
 					{
-						std::cout << "button pressed" << std::endl;
 						if (!button_pressed)
 						{
-							std::cout << "start pathfinder" << std::endl;
 							world->start_pathfinder();
 							button_pressed = 1;
 						}
 						else
 						{
-							std::cout << "reset pathfinder" << std::endl;
 							world->reset_pathfinder();
 							button_pressed = 0;
 						}
 					}
 				}
-
-			}
-			/*if (event.type == sf::Event::Closed)
-			{
-				window->close();
-			}
-			if (event.type == sf::Event::MouseButtonPressed)
-			{
-				if (event.mouseButton.button == sf::Mouse::Left)
+				if (event.mouseButton.button == sf::Mouse::Right)
 				{
-					if (MPGrid.x < INT_MAX && MPGrid.y < INT_MAX)
+					if (map_borders.getGlobalBounds().contains(MPView.x, MPView.y))
 					{
-						this->world->click(MPGrid);
+						world->reset_node(MPGrid);
+						right_mouse_button_pressed = 1;
 					}
 				}
 			}
-			if (event.type == sf::Event::KeyPressed)
-			{
-				if (event.key.code == sf::Keyboard::W)
-				{
-					this->display->moveView('W', deltaTime);
-
-				}
-				if (event.key.code == sf::Keyboard::S)
-				{
-					this->display->moveView('S', deltaTime);
-
-				}
-			}*/
 		}
-		window->clear();
-		//display->set_window_to_view();
 		update();
+		window->clear();
 
 		//Game elements
 		world->draw(*window);
+		window->draw(tile_selector);
 
+		//static objects
 		display->set_window_to_default();
 		window->draw(button_resetNodes);
 		window->draw(text_MP);
+
 		window->display();
 	}
 }
 
-void Game::updateMP()
+void Game::pre_event_update()
 {
 	MPWindow = sf::Mouse::getPosition(*window);
 	display->set_window_to_view();
@@ -157,16 +164,19 @@ void Game::updateMP()
 
 	//TODO: how to make a better read? -> checktarget? 
 	//if GUI implemented there must be a checkTarget function anyways
-	if ((MPView.x > mapPosition.x && MPView.x < (mapPosition.x + columns * gridSize)) && (MPView.y > mapPosition.y && MPView.y < (mapPosition.y + rows * gridSize)))
+	if (map_borders.getGlobalBounds().contains(MPView.x, MPView.y))
 	{
 		MPGrid.x = static_cast<unsigned>(((MPView.x) - mapPosition.x) / gridSize);
 		MPGrid.y = static_cast<unsigned>(((MPView.y) - mapPosition.y) / gridSize);
+		tile_selector.setPosition(sf::Vector2f(MPGrid.x * gridSize + mapPosition.x, MPGrid.y * gridSize + mapPosition.y));
 	}
 	else
 	{
 		MPGrid.x = INT_MAX;
 		MPGrid.y = INT_MAX;
 	}
+
+
 }
 
 void Game::update()

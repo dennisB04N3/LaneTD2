@@ -31,6 +31,7 @@ public:
 	void place_startNode(sf::Vector2u coordinates);
 	void place_endNode(sf::Vector2u coordinates);
 	void place_wall(sf::Vector2u coordinates);
+	void reset_node(sf::Vector2u coordinates);
 
 	inline void start_pathfinder() { pathfinder->start(); }
 	void reset_pathfinder();
